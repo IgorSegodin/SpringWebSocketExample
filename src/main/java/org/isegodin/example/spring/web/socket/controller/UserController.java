@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author isegodin
@@ -21,13 +23,17 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class UserController {
 
-    @Autowired
-    private UserSessionService userSessionService;
+	@Autowired
+	private UserSessionService userSessionService;
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.PUT, consumes = MediaType.TEXT_PLAIN_VALUE)
-    @ResponseBody
-    public ResponseEntity authenticate(@RequestBody String name, HttpServletRequest request) {
-        userSessionService.add(CookieUtil.getJSessionId(request.getCookies()), new User(name));
-        return ResponseEntity.ok().build();
-    }
+	@RequestMapping(value = "/authenticate", method = RequestMethod.PUT, consumes = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public ResponseEntity authenticate(@RequestBody String name, HttpServletRequest request, HttpServletResponse response) {
+		String sessionId = String.valueOf(System.currentTimeMillis());
+		Cookie cookie = new Cookie(CookieUtil.SESSION_ID, sessionId);
+		cookie.setPath("/");
+		response.addCookie(cookie);
+		userSessionService.add(sessionId, new User(name));
+		return ResponseEntity.ok().build();
+	}
 }

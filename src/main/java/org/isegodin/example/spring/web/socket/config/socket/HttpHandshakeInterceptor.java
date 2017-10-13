@@ -19,7 +19,10 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         if (request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-            attributes.put("sessionId", CookieUtil.getJSessionId(servletRequest.getServletRequest().getCookies()));
+	        String jSessionId = CookieUtil.getJSessionId(servletRequest.getServletRequest().getCookies());
+	        if (jSessionId != null) {
+		        attributes.put(CookieUtil.SESSION_ID, jSessionId);
+	        }
         }
         return true;
     }

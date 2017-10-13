@@ -7,10 +7,14 @@ import javax.servlet.http.Cookie;
  */
 public class CookieUtil {
 
+	public static final String SESSION_ID = "sessionId";
 
     public static String getJSessionId(Cookie[] cookies) {
+    	if (cookies == null) {
+    		return null;
+	    }
         for (Cookie cookie : cookies) {
-            if ("JSESSIONID".equals(cookie.getName())) {
+	        if (SESSION_ID.equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }

@@ -2,6 +2,7 @@ package org.isegodin.example.spring.web.socket.config.socket;
 
 import org.isegodin.example.spring.web.socket.data.User;
 import org.isegodin.example.spring.web.socket.service.UserSessionService;
+import org.isegodin.example.spring.web.socket.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class HandshakeHandler extends DefaultHandshakeHandler {
 
     @Override
     protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
-        if (!attributes.containsKey("sessionId")) {
+        if (!attributes.containsKey(CookieUtil.SESSION_ID)) {
             throw new RuntimeException("No sessionId attribute");
         }
 
